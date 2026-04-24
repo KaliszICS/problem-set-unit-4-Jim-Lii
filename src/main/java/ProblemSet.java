@@ -83,7 +83,6 @@ public class ProblemSet {
 				}
 			}
 			input.nextLine(); //reset stuff for next round
-			selectedOption = 0;
 			prompt = "";
 			correct = check(selectedOption, ranNum, bottomRange, topRange, bottomEvenPoint, topEvenPoint);
 
@@ -95,6 +94,7 @@ public class ProblemSet {
 				System.out.println("incorrect.");
 			}
 			System.out.println("Current score: " + score);
+			selectedOption = 0;
 		}
 
         //final results
