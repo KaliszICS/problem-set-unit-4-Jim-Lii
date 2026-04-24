@@ -17,7 +17,7 @@ public class ProblemSet {
 		System.out.println("Welcome to the High Low Guessing Game.\n");
 		System.out.print("Input a number of rounds to play: ");
 		int rounds = 0;
-		
+
 		//get rounds
 		while (rounds < 1) { //continues until rounds > 0
 			while (!input.hasNextInt()) { //is integer?
@@ -33,44 +33,45 @@ public class ProblemSet {
 
 		//get range
 		String range = "", rangeLeft = "", rangeRight = "";
-		int splitIndex = -1;
+		int splitIndex = -1, bottomRange = 0, topRange = 0;
 		System.out.println("\nWhat Range would you like to play between (#-#)?");
-		while (!isNumber(rangeLeft) || !isNumber(rangeRight)) { //while each side of the range is not a number
-			while (splitIndex < 0) { //while there is not a point to split
-				range = input.nextLine();
-				splitIndex = splitIndex(range);
-				if (splitIndex < 0) {
+		while (topRange - bottomRange < 2) { //while there are less than 3 possible numbers
+			while (!isNumber(rangeLeft) || !isNumber(rangeRight)) { //while each side of the range is not a number
+				while (splitIndex < 0) { //while there is not a point to split
+					range = input.nextLine();
+					splitIndex = splitIndex(range);
+					if (splitIndex < 0) {
+						System.out.println("\nInvalid Input!\nWhat Range would you like to play between (#-#)?");
+					}
+				}
+				rangeLeft = range.substring(0, splitIndex); //split the range
+				rangeRight = range.substring(splitIndex + 1);
+				if (!isNumber(rangeLeft) || !isNumber(rangeRight)) {
 					System.out.println("\nInvalid Input!\nWhat Range would you like to play between (#-#)?");
+					splitIndex = -1;
 				}
 			}
-			rangeLeft = range.substring(0, splitIndex); //split the range
-			rangeRight = range.substring(splitIndex + 1);
-			if (!isNumber(rangeLeft) || !isNumber(rangeRight)) {
+			bottomRange = Math.min(Integer.parseInt(rangeLeft), Integer.parseInt(rangeRight));
+			topRange = Math.max(Integer.parseInt(rangeLeft), Integer.parseInt(rangeRight));
+			if (topRange - bottomRange < 2) {
+			    rangeLeft = "";
+			    rangeRight = "";
+			    splitIndex = -1;
 				System.out.println("\nInvalid Input!\nWhat Range would you like to play between (#-#)?");
-				splitIndex = -1; //reset index
 			}
 		}
 
 		// get ranges for high, low, and even
-		int bottomRange = Math.min(Integer.parseInt(rangeLeft), Integer.parseInt(rangeRight));
-		int topRange = Math.max(Integer.parseInt(rangeLeft), Integer.parseInt(rangeRight));
 		double evenPoint = (bottomRange + topRange) / 2.0;
 		int bottomEvenPoint = (int) Math.floor(evenPoint), topEvenPoint = (int) Math.ceil(evenPoint);
 		int selectedOption = 0, score = 0;
 		boolean correct;
-		
+
 		//game start
 		for (int i = 1; i <= rounds; i++) {
 			int ranNum = random.nextInt(topRange - bottomRange + 1) + bottomRange; //get random number
 			System.out.println("\nRound " + i + ":");
-			String prompt = "Please select High, Low, or Even:\n"; //made prompt a variable for less mess
-			prompt += "1. High (" + (topEvenPoint + 1) + " to " + topRange + ")\n";
-			prompt += "2. Low (" + bottomRange + " to " + (bottomEvenPoint - 1) + ")\n";
-			if (bottomEvenPoint != topEvenPoint) { // if multiple even points
-				prompt += "3. Even (" + bottomEvenPoint + " to " + topEvenPoint + ")\n";
-			} else { // if single even point
-				prompt += "3. Even (" + bottomEvenPoint + ")";
-			}
+			String prompt = prompt(bottomRange, bottomEvenPoint, topEvenPoint, topRange);
 			System.out.println(prompt);
 			while (selectedOption > 3 || selectedOption < 1) { // until integer is 1, 2, or 3
 				while (!input.hasNextInt()) { // until input is integer
@@ -97,7 +98,7 @@ public class ProblemSet {
 			selectedOption = 0;
 		}
 
-        //final results
+		//final results
 		System.out.println("\nTotal Score: " + score);
 		if (rounds/2.0 > score) {
 			System.out.print("You got " + score + " out of " + rounds + " correct. Better luck next time.");
@@ -106,7 +107,7 @@ public class ProblemSet {
 		}
 	}
 
-    //method checks if range is splittable, then returns the index of the split point
+	//method checks if range is splittable, then returns the index of the split point
 	public static int splitIndex(String range) {
 		if (!range.contains("-")) {
 			return -1; //if no dash
@@ -117,7 +118,7 @@ public class ProblemSet {
 		return range.indexOf("-"); //if does not start with dash
 	}
 
-    //method checks if something is a number
+	//method checks if something is a number
 	public static boolean isNumber(String num) {
 		// check if the string is a number
 		if (num.startsWith("-")) { //remove dash
@@ -133,8 +134,26 @@ public class ProblemSet {
 		}
 		return true;
 	}
+	
+	//method makes prompt
+	public static String prompt(int bottomRange, int bottomEvenPoint, int topEvenPoint, int topRange){
+	    String prompt = "Please select High, Low, or Even:\n1. High (" + (topEvenPoint + 1);
+			if (topEvenPoint + 1 != topRange){
+			    prompt += " to " + topRange;
+			}
+			prompt += ")\n2. Low (" + bottomRange;
+			if (bottomRange != bottomEvenPoint - 1){
+			    prompt += " to " + (bottomEvenPoint - 1);
+			}
+			prompt += ")\n3. Even (" + bottomEvenPoint;
+			if (bottomEvenPoint != topEvenPoint){
+			    prompt += " to " + topEvenPoint;
+			}
+			prompt += ")";
+			return prompt;
+	}
 
-    //method checks selected option. Correct = true, incorrect = false
+	//method checks selected option. Correct = true, incorrect = false
 	public static boolean check(int selectedOption, int ranNum, int bottomRange, int topRange, int bottomEvenPoint, int topEvenPoint) {
 		if (selectedOption == 1) { //high
 			if (ranNum >= topEvenPoint && ranNum <= topRange) {
