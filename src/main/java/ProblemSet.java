@@ -2,7 +2,7 @@
 File Name: Problem Set Unit 4 (100%)
 Author: Jim Li
 Date Created: Apr. 20, 2026
-Date Last Modified: Apr. 24, 2026
+Date Last Modified: Apr. 27, 2026
 */
 
 import java.util.Scanner;
@@ -16,11 +16,11 @@ public class ProblemSet {
 		//welcome message
 		System.out.println("Welcome to the High Low Guessing Game.\n");
 		System.out.print("Input a number of rounds to play: ");
-		int rounds = 0;
 
 		//get rounds
-		while (rounds < 1) { //continues until rounds > 0
-			while (!input.hasNextInt()) { //is integer?
+		int rounds = 0;
+		while (rounds < 1) { //until rounds > 0
+			while (!input.hasNextInt()) { //until is integer
 				input.nextLine();
 				System.out.print("\nInvalid Input!\nInput a number of rounds to play: ");
 			}
@@ -48,13 +48,13 @@ public class ProblemSet {
 				rangeRight = range.substring(splitIndex + 1);
 				if (!isNumber(rangeLeft) || !isNumber(rangeRight)) {
 					System.out.println("\nInvalid Input!\nWhat Range would you like to play between (#-#)?");
-					splitIndex = -1;
+					splitIndex = -1; //reset
 				}
 			}
 			bottomRange = Math.min(Integer.parseInt(rangeLeft), Integer.parseInt(rangeRight));
 			topRange = Math.max(Integer.parseInt(rangeLeft), Integer.parseInt(rangeRight));
 			if (topRange - bottomRange < 2) {
-			    rangeLeft = "";
+			    rangeLeft = ""; //reset
 			    rangeRight = "";
 			    splitIndex = -1;
 				System.out.println("\nInvalid Input!\nWhat Range would you like to play between (#-#)?");
@@ -100,7 +100,7 @@ public class ProblemSet {
 
 		//final results
 		System.out.println("\nTotal Score: " + score);
-		if (rounds/2.0 > score) {
+		if (rounds/2.0 > score) { //if below 50%
 			System.out.print("You got " + score + " out of " + rounds + " correct. Better luck next time.");
 		} else {
 			System.out.print("Congratulations you got " + score + " out of " + rounds + " rounds right!");
@@ -135,7 +135,7 @@ public class ProblemSet {
 		return true;
 	}
 	
-	//method makes prompt
+	//method makes prompt (select high low or even)
 	public static String prompt(int bottomRange, int bottomEvenPoint, int topEvenPoint, int topRange){
 	    String prompt = "Please select High, Low, or Even:\n1. High (" + (topEvenPoint + 1);
 			if (topEvenPoint + 1 != topRange){
@@ -156,13 +156,13 @@ public class ProblemSet {
 	//method checks selected option. Correct = true, incorrect = false
 	public static boolean check(int selectedOption, int ranNum, int bottomRange, int topRange, int bottomEvenPoint, int topEvenPoint) {
 		if (selectedOption == 1) { //high
-			if (ranNum >= topEvenPoint && ranNum <= topRange) {
+			if (ranNum > topEvenPoint && ranNum <= topRange) {
 				return true;
 			}
 			return false;
 		}
 		if (selectedOption == 2) { //low
-			if (ranNum >= bottomRange && ranNum <= bottomEvenPoint) {
+			if (ranNum >= bottomRange && ranNum < bottomEvenPoint) {
 				return true;
 			}
 			return false;
