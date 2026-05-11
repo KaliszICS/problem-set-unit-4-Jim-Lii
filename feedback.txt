@@ -1,0 +1,10 @@
+K(30%): 100
+I(30%): 98
+C(10%): 100
+A(30%): 100
+99.4%
+
+Great work Jim.  Couple small things to look at in the future.
+Don't over engineer a function.  Your splitIndex function checks if there is a "-" and returns -1 if it doesn't.  indexOf already does that.
+Your number check also checks to see if the random number is lower than the top number or higher than the bottom(this shouldn't need to be checked since it shouldn't create a random number that isn't)
+Otherwise fantastic work!
